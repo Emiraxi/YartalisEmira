@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Врата Ялдариона — Вход и Регистрация</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Roboto&display=swap');
+
+    body {
+        margin: 0; padding: 0;
+        height: 100vh;
+        background: radial-gradient(ellipse at center, #1a0a3e 0%, #050011 90%);
+        font-family: 'Roboto', sans-serif;
+        color: #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        display: flex;
+        gap: 50px;
+        background: rgba(10, 5, 30, 0.85);
+        border: 2px solid #aa33ff;
+        border-radius: 20px;
+        padding: 40px 50px;
+        box-shadow:
+            0 0 15px #9a2fff,
+            inset 0 0 30px #bb66ff;
+        max-width: 720px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-box {
+        background: linear-gradient(145deg, #2b0e5a, #1b0533);
+        border-radius: 16px;
+        padding: 30px 25px;
+        width: 320px;
+        box-shadow:
+            0 0 10px #a050ff,
+            inset 0 0 15px #7a00cc;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h2 {
+        font-family: 'Cinzel Decorative', serif;
+        font-size: 32px;
+        margin-bottom: 25px;
+        color: #cc99ff;
+        text-shadow: 0 0 6px #bb66ff;
+    }
+
+    input[type=text], input[type=password] {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 22px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        background: rgba(255,255,255,0.1);
+        color: #ddd;
+        box-shadow: inset 0 0 6px #9a33ff;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type=text]::placeholder,
+    input[type=password]::placeholder {
+        color: #cbbcff;
+        font-style: italic;
+    }
+    input[type=text]:focus, input[type=password]:focus {
+        background: rgba(255,255,255,0.2);
+        box-shadow: 0 0 12px #cc99ff;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px 0;
+        background: linear-gradient(90deg, #b57fff, #8e32ff);
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 0 10px #b57fff;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+        user-select: none;
+    }
+    button:hover {
+        background: linear-gradient(90deg, #d3aaff, #aa66ff);
+        box-shadow: 0 0 20px #d3aaff;
+    }
+    button:active {
+        transform: scale(0.98);
+    }
+
+    .message {
+        min-height: 24px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        text-align: center;
+    }
+    .error {
+        color: #ff6666;
+        text-shadow: 0 0 5px #ff4444;
+    }
+    .success {
+        color: #88ff88;
+        text-shadow: 0 0 6px #44cc44;
+    }
+
+    @media(max-width: 700px) {
+        .container {
+            flex-direction: column;
+            padding: 30px 20px;
+        }
+        .form-box {
+            width: 100%;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Вход -->
+    <div class="form-box">
+        <h2>Вход</h2>
+        <div id="loginMessage" class="message"></div>
+        <input type="text" id="loginUsername" placeholder="Имя пользователя" />
+        <input type="password" id="loginPassword" placeholder="Пароль" />
+        <button onclick="handleLogin()">Войти</button>
+    </div>
+
+    <!-- Регистрация -->
+    <div class="form-box">
+        <h2>Регистрация</h2>
+        <div id="regMessage" class="message"></div>
+        <input type="text" id="regUsername" placeholder="Новое имя" />
+        <input type="password" id="regPassword" placeholder="Пароль" />
+        <button onclick="handleRegister()">Зарегистрироваться</button>
+    </div>
+
+</div>
+
+<script>
+    // Функция для загрузки пользователей из localStorage
+    function getUsers() {
+        const data = localStorage.getItem('users');
+        return data ? JSON.parse(data) : {};
+    }
+
+    // Функция для сохранения пользователей в localStorage
+    function saveUsers(users) {
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    // Обработка входа
+    function handleLogin() 
+    {
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const msg = document.getElementById('loginMessage');
+
+        if (!username || !password) {
+            msg.textContent = "Пожалуйста, заполните все поля.";
+            msg.className = 'message error';
+            return;
+        }
+
+        const users = getUsers();
+
+        if (users[username] && users[username] === password) {
+    msg.textContent = "Успешный вход! Перенаправление...";
+    msg.className = 'message success';
+
+    // Запоминаем, что вошёл
+    localStorage.setItem("loggedIn", "true");
+    localStorage.setItem("currentUser", username); // если хочешь знать кто вошёл
+
+    // Переход на страницу каталога через 1 секунду
+    setTimeout(() => {
+        window.location.href = "Catalog.html";
+    }, 1000);
+}
+ else {
+            msg.textContent = "Неверное имя пользователя или пароль.";
+            msg.className = 'message error';
+        }
+    }
+
+    // Обработка регистрации
+    function handleRegister() {
+        const username = document.getElementById('regUsername').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const msg = document.getElementById('regMessage');
+
+        if (!username || !password) {
+            msg.textContent = "Пожалуйста, заполните все поля.";
+            msg.className = 'message error';
+            return;
+        }
+
+        const users = getUsers();
+
+        if (users[username]) {
+            msg.textContent = "Такое имя уже занято.";
+            msg.className = 'message error';
+            return;
+        }
+
+        users[username] = password;
+        saveUsers(users);
+
+        msg.textContent = "Регистрация прошла успешно!";
+        msg.className = 'message success';
+
+        // Очистка полей после регистрации
+        document.getElementById('regUsername').value = '';
+        document.getElementById('regPassword').value = '';
+    }
+</script>
+</body>
+</html>

@@ -1,6 +1,12 @@
+img, video {
+  max-width: 100%;   /* не выходит за пределы контейнера */
+  height: auto;      /* сохраняет пропорции */
+  display: block;    /* убирает лишние отступы снизу */
+}
 body {
     background-color: #111;
     color: #eee;
     font-family: Georgia, serif;
     padding: 2rem;
+
 }

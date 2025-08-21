@@ -10,3 +10,16 @@ body {
     padding: 2rem;
 
 }
+/* Для экранов до 600px (мобильные телефоны) */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;   /* меньше отступы */
+  }
+  h1 {
+    font-size: 1.5rem;  /* уменьшаем заголовки */
+  }
+  nav {
+    font-size: 14px;     /* уменьшаем меню */
+  }
+}
+
